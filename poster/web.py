@@ -14,6 +14,8 @@ class Application(cyclone.web.Application):
     def __init__(self, config_file):
         handlers = [
             (r"/", views.IndexHandler),
+            (r"/auth/login", views.AuthLoginHandler),
+            (r"/trial", views.PostHandler),
             (r"/lang/(.+)", views.LangHandler),
         ]
 
@@ -24,6 +26,6 @@ class Application(cyclone.web.Application):
         if locales:
             cyclone.locale.load_gettext_translations(locales, "poster")
 
-        #settings["login_url"] = "/auth/login"
+        settings["login_url"] = "/auth/login"
         #settings["autoescape"] = None
         cyclone.web.Application.__init__(self, handlers, **settings)

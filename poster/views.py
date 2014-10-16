@@ -13,7 +13,12 @@ from twisted.python import log
 from utils import BaseHandler
 from utils import TemplateFields
 
+
 class IndexHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
+    def get(self):
+        self.write("Probando")
+
+class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.asynchronous
     def get(self):
         print "trying"
@@ -24,29 +29,42 @@ class IndexHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
                 client_id=os.getenv('FB_API_KEY'),
                 client_secret=os.getenv('FB_API_SECRET'),
                 code=self.get_argument("code"),
-                callback=self.async_callback(self._on_login)
+                callback=self.async_callback(self._on_auth)
             )
             return
         print "redirect"
         self.authorize_redirect(
             redirect_uri='http://localhost:8888/trial',
             client_id=os.getenv('FB_API_KEY'),
-            extra_params={"scope": "read_stream"}
+            extra_params={"scope": "publish_actions"}
         )
 
-    def _on_login(self):
-        logging.error(user)
-        self.finish()
+    def _on_auth(self, user):
+        if not user:
+            raise cyclone.web.HTTPError(500, "Facebook auth failed")
+        self.set_secure_cookie("fbdemo_user", cyclone.escape.json_encode(user))
+        self.redirect(self.get_argument("next", "/"))
 
-    def post(self):
-        tpl_fields = TemplateFields()
-        tpl_fields['post'] = True
-        tpl_fields['ip'] = self.request.remote_ip
-        # you can also fetch your own config variables defined in
-        # poster.conf using
-        # self.settings.raw.get('section', 'parameter')
-        tpl_fields['mysql_host'] = self.settings.raw.get('mysql', 'host')
-        self.render("post.html", fields=tpl_fields)
+
+class PostHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
+    @cyclone.web.authenticated
+    @cyclone.web.asynchronous
+    def get(self):
+        print "Posting to facebook wall", self
+        self.facebook_request(
+            "/me/feed",
+            post_args={'message': 'Desde aplicación cyclone'},
+            access_token=self.current_user['access_token'],
+            callback=self._on_post,
+        )
+
+    def _on_post(self, new_entry):
+        print "new_entry is", new_entry
+        if not new_entry:
+            self.redirect('/auth/login')
+            return
+
+        self.finish("Posted a message! {}".format(new_entry))
 
 
 class LangHandler(BaseHandler):

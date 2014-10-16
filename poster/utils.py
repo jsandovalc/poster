@@ -23,7 +23,7 @@ from twisted.enterprise import adbapi
 
 
 class TemplateFields(dict):
-    """Helper class to make sure our
+    """Helper class to make sure ourp
         template doesn't fail due to an invalid key"""
     def __getattr__(self, name):
         try:
@@ -36,13 +36,16 @@ class TemplateFields(dict):
 
 
 class BaseHandler(cyclone.web.RequestHandler):
-    #def get_current_user(self):
-    #    user_json = self.get_secure_cookie("user")
-    #    if user_json:
-    #        return cyclone.escape.json_decode(user_json)
+    def get_current_user(self):
+        print "in current user"
+        user_json = self.get_secure_cookie("user")
+        if user_json:
+            print "returnig", user_json
+            return cyclone.escape.json_decode(user_json)
+
+        print "not returning :("
 
     def get_user_locale(self):
         lang = self.get_secure_cookie("lang")
         if lang:
             return cyclone.locale.get(lang)
-
