@@ -1,0 +1,5 @@
+*.swp
+*.pyc
+dropin.cache
+venv
+.env
