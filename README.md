@@ -1,7 +1,7 @@
 # Poster app for multiple social networks.
 
     This is the source code of poster
-    Foo Bar <root@localhost>
+    Jonathan Sandoval <jsandoval@utp.edu.co>
 
 ## Tasks
 1. Post to facebook from python/cyclone.
@@ -18,11 +18,6 @@
 This file has been created automatically by cyclone for poster.
 It contains the following:
 
-- ``Procman``: standard foreman file
-- ``start.sh``: simple shell script to start the development server
-- ``poster.conf``: configuration file for the web server
-- ``poster/``: web server code
-- ``frontend/``: static files, templates and locales
 - ``scripts/``: other useful scripts
 
 

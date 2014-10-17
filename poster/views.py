@@ -22,10 +22,15 @@ class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.asynchronous
     def get(self):
         print "trying"
+        my_url = ("http://localhost:8888/auth/login?next=" +
+                  cyclone.escape.url_escape(
+                      self.get_argument("next", "/"))
+        )
+        print "to", my_url
         if self.get_argument("code", False):
-            print "code"
-            self.authorize_redirect(
-                redirect_uri='http://localhost:8888/trial',
+            print "code", self.get_argument("code", False)
+            self.get_authenticated_user(
+                redirect_uri=my_url,
                 client_id=os.getenv('FB_API_KEY'),
                 client_secret=os.getenv('FB_API_SECRET'),
                 code=self.get_argument("code"),
@@ -34,15 +39,20 @@ class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
             return
         print "redirect"
         self.authorize_redirect(
-            redirect_uri='http://localhost:8888/trial',
+            redirect_uri=my_url,
             client_id=os.getenv('FB_API_KEY'),
-            extra_params={"scope": "publish_actions"}
+            extra_params={"scope": "read_stream,publish_actions"}
         )
 
     def _on_auth(self, user):
+        print "on auth", user
         if not user:
+            print "no user"
             raise cyclone.web.HTTPError(500, "Facebook auth failed")
+        print "there is user :)"
+        # TODO: Change fbdemo_user name
         self.set_secure_cookie("fbdemo_user", cyclone.escape.json_encode(user))
+        print "going to", self.get_argument("next", "/")
         self.redirect(self.get_argument("next", "/"))
 
 
@@ -51,19 +61,21 @@ class PostHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.asynchronous
     def get(self):
         print "Posting to facebook wall", self
+        print "the token is", self.current_user['access_token']
+        print "id is", self.current_user['id']
         self.facebook_request(
             "/me/feed",
-            post_args={'message': 'Desde aplicación cyclone'},
+            callback=self.async_callback(self._on_post),
             access_token=self.current_user['access_token'],
-            callback=self._on_post,
+            post_args={'message': 'Prueba número 2'},
         )
+        print "after request"
 
     def _on_post(self, new_entry):
         print "new_entry is", new_entry
         if not new_entry:
             self.redirect('/auth/login')
             return
-
         self.finish("Posted a message! {}".format(new_entry))
 
 

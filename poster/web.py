@@ -28,4 +28,5 @@ class Application(cyclone.web.Application):
 
         settings["login_url"] = "/auth/login"
         #settings["autoescape"] = None
+        print "settings are", settings
         cyclone.web.Application.__init__(self, handlers, **settings)
