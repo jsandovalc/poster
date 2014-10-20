@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Copyright 2014 Foo Bar
 # Powered by cyclone
@@ -15,8 +15,8 @@ class Application(cyclone.web.Application):
         handlers = [
             (r"/", views.IndexHandler),
             (r"/auth/login", views.AuthLoginHandler),
-            (r"/trial", views.PostHandler),
             (r"/lang/(.+)", views.LangHandler),
+            (r"/api/post", views.PostHandler),
         ]
 
         settings = config.parse_config(config_file)

@@ -4,13 +4,14 @@
     Jonathan Sandoval <jsandoval@utp.edu.co>
 
 ## Tasks
-1. Post to facebook from python/cyclone.
+1. Post to facebook from python/cyclone. DONE
 2. Post to facebook group from python/cyclone.
 3. Schedule post.
 4. Schedule multiple posts.
 5. Create web UI for posting a single post.
 6. Post to multiple walls/groups.
 7. Update UI to suppor multiple posting.
+8. Post to Facebook from RSS.
 
 
 ## About

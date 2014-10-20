@@ -1,6 +1,7 @@
-# coding: utf-8
+# -*- coding: utf-8 -*-
 import os
 import logging
+import json
 
 import cyclone.escape
 import cyclone.locale
@@ -59,24 +60,34 @@ class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
 class PostHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.authenticated
     @cyclone.web.asynchronous
-    def get(self):
-        print "Posting to facebook wall", self
-        print "the token is", self.current_user['access_token']
-        print "id is", self.current_user['id']
+    def post(self):
+        # TODO: must check sent content type, return 415
+        self.set_header("Content-type", "application/json; charset=utf-8")
+        try:
+            body = json.loads(self.request.body)
+        except ValueError:
+            self.set_status(400, "Bad json")
+            # TODO: Add code
+            self.finish(json.dumps({'message': "Bad json sent"}))
+            return
+        if 'message' not in body:
+            self.set_status(422, "Message not sent")
+            self.finish(json.dumps({'message': 'must send message'}))
+
         self.facebook_request(
             "/me/feed",
             callback=self.async_callback(self._on_post),
             access_token=self.current_user['access_token'],
-            post_args={'message': 'Prueba número 2'},
+            post_args={'message': body['message']},
         )
-        print "after request"
 
     def _on_post(self, new_entry):
-        print "new_entry is", new_entry
         if not new_entry:
             self.redirect('/auth/login')
             return
-        self.finish("Posted a message! {}".format(new_entry))
+        self.set_status(201)
+        print "new_entry", new_entry
+        self.finish(json.dumps({'message': 'Post created'}))
 
 
 class LangHandler(BaseHandler):
