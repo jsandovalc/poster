@@ -31,7 +31,8 @@ from utils import TemplateFields
 
 class IndexHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     def get(self):
-        self.write("Probando")
+        self.render("index.html", hello='world',
+                    awesome='I am')
 
 class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.asynchronous
