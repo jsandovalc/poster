@@ -14,6 +14,7 @@
 #     You should have received a copy of the GNU General Public License
 #     along with Poster.  If not, see <http://www.gnu.org/licenses/>.
 
+import json
 
 from twisted.trial import unittest
 from twisted.internet import defer
@@ -30,11 +31,18 @@ class TestPostHandler(unittest.TestCase):
         request.headers = {}
         request.method = "POST"
         request.version = "HTTP MOCK"
+        request.body = '{"message": "Probando"}'
         request.notifyFinish.return_value = defer.Deferred()
         request.supports_http_1_1.return_value = True
         self.handler = PostHandler(app, request)
+        self.handler.get_secure_cookie = MagicMock()
+        self.handler.get_secure_cookie.return_value = json.dumps(
+            {
+                'user': 'test',
+                'access_token': 'ASDFAS',
+            }
+        )
 
     @patch('cyclone.auth.httpclient.fetch')
     def test_post(self, mock):
-        print 'prueba'
         self.handler.post()

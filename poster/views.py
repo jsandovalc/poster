@@ -38,14 +38,11 @@ class IndexHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
 class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
     @cyclone.web.asynchronous
     def get(self):
-        print "trying"
         my_url = ("http://localhost:8888/auth/login?next=" +
                   cyclone.escape.url_escape(
                       self.get_argument("next", "/"))
         )
-        print "to", my_url
         if self.get_argument("code", False):
-            print "code", self.get_argument("code", False)
             self.get_authenticated_user(
                 redirect_uri=my_url,
                 client_id=os.getenv('FB_API_KEY'),
@@ -54,7 +51,6 @@ class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
                 callback=self.async_callback(self._on_auth)
             )
             return
-        print "redirect"
         self.authorize_redirect(
             redirect_uri=my_url,
             client_id=os.getenv('FB_API_KEY'),
@@ -62,14 +58,10 @@ class AuthLoginHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
         )
 
     def _on_auth(self, user):
-        print "on auth", user
         if not user:
-            print "no user"
             raise cyclone.web.HTTPError(500, "Facebook auth failed")
-        print "there is user :)"
         # TODO: Change fbdemo_user name
         self.set_secure_cookie("fbdemo_user", cyclone.escape.json_encode(user))
-        print "going to", self.get_argument("next", "/")
         self.redirect(self.get_argument("next", "/"))
 
 
@@ -102,7 +94,6 @@ class PostHandler(BaseHandler, cyclone.auth.FacebookGraphMixin):
             self.redirect('/auth/login')
             return
         self.set_status(201)
-        print "new_entry", new_entry
         self.finish(json.dumps({'message': 'Post created'}))
 
 

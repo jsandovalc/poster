@@ -24,13 +24,9 @@ class TemplateFields(dict):
 
 class BaseHandler(cyclone.web.RequestHandler):
     def get_current_user(self):
-        print "in current user"
         user_json = self.get_secure_cookie("fbdemo_user")
         if user_json:
-            print "returnig", user_json
             return cyclone.escape.json_decode(user_json)
-
-        print "not returning :("
 
     def get_user_locale(self):
         lang = self.get_secure_cookie("lang")
