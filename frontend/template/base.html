@@ -1,41 +1,73 @@
 <!doctype html>
 <html lang="en">
   <head>
-  <title>Poster!</title>
+    <title>Poster!</title>
 
-  <meta name="viewport"
-        content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport"
+          content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
 
-  <script src="../static/components/webcomponentsjs/webcomponents.js">
-  </script>
+    <script src="../static/components/webcomponentsjs/webcomponents.js">
+    </script>
 
-  <link rel="import" href="../static/components/font-roboto/roboto.html">
+    <link rel="import" href="../static/components/font-roboto/roboto.html">
+    <link rel="import"
+          href="../static/components/core-header-panel/core-header-panel.html">
+    <link rel="import"
+          href="../static/components/core-toolbar/core-toolbar.html">
+    <link rel="import"
+          href="../static/components/paper-tabs/paper-tabs.html">
 
-  <style>
-   html,body {
-     height: 100%;
-     margin: 0;
-     background-color: #E5E5E5;
-     font-family: 'RobotoDraft', sans-serif;
-   }
-   .container {
-     width: 80%;
-     margin: 50px auto;
-   }
-   @media (min-width: 481px) {
+    <style>
+     html,body {
+       height: 100%;
+       margin: 0;
+       background-color: #E5E5E5;
+       font-family: 'RobotoDraft', sans-serif;
+     }
+     core-header-panel {
+       height: 100%;
+       overflow: auto;
+       -webkit-overflow-scrolling: touch;
+     }
+     core-toolbar {
+       background: #03a9f4;
+       color: white;
+     }
      #tabs {
-       width: 200px;
+       width: 100%;
+       margin: 0;
+       -webkit-user-select: none;
+       -moz-user-select: none;
+       -ms-user-select: none;
+       user-select: none;
+       text-transform: uppercase;
      }
+
+
      .container {
-       width: 400px;
+       width: 80%;
+       margin: 50px auto;
      }
-   }
-  </style>
-</head>
-
+     @media (min-width: 481px) {
+       #tabs {
+         width: 200px;
+       }
+       .container {
+         width: 400px;
+       }
+     }
+    </style>
   </head>
-  {% block page %} {% end %}
-  <body>
 
+  <body poster>
+    <core-header-panel>
+      <core-toolbar>
+        <paper-tabs id="tabs" select="all" self-end>
+          <paper-tab name="all">All</paper-tab>
+          <paper-tab name="favorites">Favorites</paper-tab>
+        </paper-tabs>
+      </core-toolbar>
+    </core-header-panel>
+    {% block page %} {% end %}
   </body>
 </html>
