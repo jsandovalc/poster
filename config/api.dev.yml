@@ -1,0 +1,12 @@
+# app
+app:
+  host: 0.0.0.0
+  port: 8000
+
+# postgres
+postgres:
+  user: postgres
+  password: postgres
+  database: postgres
+  port: 5432
+  host: postgres

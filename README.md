@@ -1,115 +1,140 @@
-# Poster app for multiple social networks.
+# new_poster
 
-    This is the source code of poster
-    Jonathan Sandoval <jsandoval@utp.edu.co>
+___
 
-## Tasks
-1. Post to facebook from python/cyclone. DONE
-2. Post to facebook group from python/cyclone.
-3. Schedule post.
-4. Schedule multiple posts.
-5. Create web UI for posting a single post.
-6. Post to multiple walls/groups.
-7. Update UI to suppor multiple posting.
-8. Post to Facebook from RSS.
+## Requirements
+- docker-compose
 
+___
 
-## About
+## Features
 
-This file has been created automatically by cyclone for poster.
-It contains the following:
-
-- ``scripts/``: other useful scripts
-
-
-### Running
-
-For development and testing:
-
-    gem install foreman
-    cd poster
-    foreman start
-
-For production on any foreman based env:
-
-    Follow foreman instructions, configure Procman as needed.
-    Check the .env file and the configuration file for your app.
-
-For production at heroku:
-
-    - Start a git repo
-        git init
-        git add .
-        git commit -m 'first'
-        heroku create poster # (or whatever name you want)
-        heroku push heroku master
-    - check your app, make it better, create a db, etc
+- aiohttp
+- mypy
+- pytest
+- flake8
+- trafaret
+- docker-compose
+- aio devtools
+- aiohttp debug toolbar
+- postgres
+- alembic
+- aiopg
+- sqlAlchemy
 
 
-## Customization
+## Local development
+All develop settings for application are in the `/config/api.dev.yml`.
 
-This section is dedicated to explaining how to customize your brand new
-package.
+### Run
+To start the project in develop mode, run the following command:
 
+```
+make run
+```
 
-### Databases
+or just
 
-cyclone provides built-in support for SQLite and Redis databases.
-It also supports any RDBM supported by the ``twisted.enterprise.adbapi``
-module, like MySQL or PostgreSQL.
+```
+make
+```
 
-The default configuration file ``poster.conf`` ships with pre-configured
-settings for SQLite, Redis and MySQL.
+For stop work of docker containers use:
 
-The code for loading all the database settings is in ``poster/config.py``.
-Feel free to comment or even remove such code, and configuration entries. It
-shouldn't break the web server.
+```
+make stop
+```
 
-Take a look at ``poster/utils.py``, which is where persistent database
-connections are initialized.
+For clean up work of docker containers use:
 
+```
+make clean
+```
 
-### Internationalization
+Interactive work inside container
 
-cyclone uses the standard ``gettext`` library for dealing with string
-translation.
+```
+make bash # the command must be running after `make run` 
+```
 
-Make sure you have the ``gettext`` package installed. If you don't, you won't
-be able to translate your software.
+### Docs
 
-For installing the ``gettext`` package on Debian and Ubuntu systems, do this:
+For generate sphinx docs
+```
+make doc
+```
 
-    apt-get install gettext
+### Linters
+To run flake8, run the following command:
 
-For Mac OS X, I'd suggest using [HomeBrew](http://mxcl.github.com/homebrew>).
-If you already use HomeBrew, run:
+```
+make lint
+```
 
-    brew install gettext
-    brew link gettext
+The all settings connected with a `flake8` you can customize in `.flake8`.
 
-For generating translatable files for HTML and Python code of your software,
-run this:
+### Type checking
+To run mypy for type checking run the following command:
 
-    cat frontend/template/*.html poster/*.py | python scripts/localefix.py | xgettext - --language=Python --from-code=utf-8 --keyword=_:1,2 -d poster
+```
+make mypy
+```
 
-Then translate poster.po, compile and copy to the appropriate locale
-directory:
+The all settings connected with a `mypy` you can customize in `mypy.ini`.
+___
 
-    (pt_BR is used as example here)
-    vi poster.po
-    mkdir -p frontend/locale/pt_BR/LC_MESSAGES/
-    msgfmt poster.po -o frontend/locale/pt_BR/LC_MESSAGES/poster.mo
+### Testing
+```
+make test
+```
 
-There are sample translations for both Spanish and Portuguese in this package,
-already compiled.
+### Database
+Management of database (postgres) migrations takes place with the help of [alembic](http://alembic.zzzcomputing.com/en/latest/).
 
+Create new migration (new file in `new_poster/migrations/versions/`):
 
-### Cookie Secret
+```
+make migrations # the command must be running after `make run` 
+```
 
-The current cookie secret key in ``poster.conf`` was generated during the
-creation of this package. However, if you need a new one, you may run the
-``scripts/cookie_secret.py`` script to generate a random key.
+Apply migrations:
 
-## Credits
+```
+make migrate # the command must be running after `make run` 
+```
 
-- [cyclone](http://github.com/fiorix/cyclone) web server.
+If u wanna create new file with tables u should import tables to `new_poster/migrations/env.py`
+
+```
+import new_poster.users.tables # import new files here
+```
+
+If u need to make downgrade or other special things with alembic, use `make bash`
+for penetration inside the container and run native alembic's commands.
+
+```
+make bash
+alembic downgrade -1
+```
+
+To connect to postgres, use the command below
+
+```
+make psql # the command must be running after `make run` 
+```
+
+## Production
+All production settings for application are in the `/config/api.prod.yml`.
+
+The production and develop containers have a little bit different and all that different describe in docker-compose.production.yml. This  is works with the command bellow:
+
+```
+make production
+```
+
+for more information [docs](https://docs.docker.com/compose/reference/overview/).
+___
+
+## Software
+
+- python3.7

@@ -1,0 +1,7 @@
+aiohttp==3.5.0
+aiohttp_jinja2==1.1.0
+trafaret_config==2.0.2
+markdown2==2.3.7
+aiopg[sa]==0.15.0
+psycopg2-binary==2.7.6.1
+alembic==1.0.5
