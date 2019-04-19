@@ -1,4 +1,4 @@
-# new_poster
+# poster
 
 ___
 
@@ -91,7 +91,7 @@ make test
 ### Database
 Management of database (postgres) migrations takes place with the help of [alembic](http://alembic.zzzcomputing.com/en/latest/).
 
-Create new migration (new file in `new_poster/migrations/versions/`):
+Create new migration (new file in `poster/migrations/versions/`):
 
 ```
 make migrations # the command must be running after `make run` 
@@ -103,10 +103,10 @@ Apply migrations:
 make migrate # the command must be running after `make run` 
 ```
 
-If u wanna create new file with tables u should import tables to `new_poster/migrations/env.py`
+If u wanna create new file with tables u should import tables to `poster/migrations/env.py`
 
 ```
-import new_poster.users.tables # import new files here
+import poster.users.tables # import new files here
 ```
 
 If u need to make downgrade or other special things with alembic, use `make bash`

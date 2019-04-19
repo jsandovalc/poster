@@ -1,11 +1,11 @@
-PROJECT_NAME=new_poster
+PROJECT_NAME=poster
 
 # Common
 
 all: run
 
 run:
-	@docker-compose up new_poster_app
+	@docker-compose up poster_app
 
 stop:
 	@docker-compose stop
@@ -14,7 +14,7 @@ clean:
 	@docker-compose down
 
 bash:
-	@docker exec -it new_poster bash
+	@docker exec -it poster bash
 
 # Docs
 
@@ -39,18 +39,18 @@ test: lint
 # Database
 
 psql:
-	@docker exec -it new_poster_postgres psql -U postgres
+	@docker exec -it poster_postgres psql -U postgres
 
 migrations:
-	@docker exec -it new_poster alembic -n alembic:dev revision --autogenerate;
+	@docker exec -it poster alembic -n alembic:dev revision --autogenerate;
 
 migrate:
-	@docker exec -it new_poster alembic -n alembic:dev upgrade head;
+	@docker exec -it poster alembic -n alembic:dev upgrade head;
 
 run_production:
 	@docker-compose -f docker-compose.yml -f docker-compose.production.yml up
 
 adev: wait_resources 
-	adev runserver ./new_poster/__main__.py -p 8080
+	adev runserver ./poster/__main__.py -p 8080
 wait_resources:
-	python3 -m new_poster.utils.wait_script
+	python3 -m poster.utils.wait_script

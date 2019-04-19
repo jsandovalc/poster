@@ -2,10 +2,10 @@ import pytest
 from sqlalchemy import create_engine
 import aiopg.sa
 
-from new_poster.utils.common import PATH, get_config
-from new_poster.app import init_app
-from new_poster.migrations import metadata
-from new_poster.users.tables import users
+from poster.utils.common import PATH, get_config
+from poster.app import init_app
+from poster.migrations import metadata
+from poster.users.tables import users
 
 
 # constants
